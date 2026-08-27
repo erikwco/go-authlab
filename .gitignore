@@ -1,0 +1,7 @@
+.env
+/bin/
+/authlab
+coverage.out
+*.test
+.idea/
+.vscode/
