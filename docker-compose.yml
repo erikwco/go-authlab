@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: authlab
+      POSTGRES_PASSWORD: authlab
+      POSTGRES_DB: authlab
+    ports:
+      - "5432:5432"
+    volumes:
+      - authlab_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authlab -d authlab"]
+      interval: 2s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      HTTP_ADDR: ":8080"
+      DATABASE_URL: postgres://authlab:authlab@postgres:5432/authlab?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  authlab_postgres_data:
