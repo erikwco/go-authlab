@@ -45,10 +45,12 @@ func TestHealth(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			mux := NewMux(stubPinger{err: tt.pingErr})
+			// mux := NewMux(stubPinger{err: tt.pingErr})
+			h := HealthHandler{DB: stubPinger{err: tt.pingErr}}
 			req := httptest.NewRequest(http.MethodGet, "/health", nil)
 			rec := httptest.NewRecorder()
-			mux.ServeHTTP(rec, req)
+			h.ServeHTTP(rec, req)
+			// mux.ServeHTTP(rec, req)
 
 			if rec.Code != tt.wantStatus {
 				t.Fatalf("status = %d, want %d", rec.Code, tt.wantStatus)

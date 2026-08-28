@@ -1,0 +1,51 @@
+
+### Signup
+POST http://localhost:8080/signup
+Content-Type: application/json
+
+{
+  "email": "erik@example.com",
+  "password": "123456"
+}
+
+
+### Second Signup
+POST http://localhost:8080/signup
+Content-Type: application/json
+
+{
+  "email": "jose@example.com",
+  "password": "123456"
+}
+
+### third Signup
+POST http://localhost:8080/signup
+Content-Type: application/json
+
+{
+  "email": "mario@example.com",
+  "password": "123456"
+}
+
+### Login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "erik@example.com",
+  "password": "123456"
+}
+
+### Erroneous Login
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "erik@example.com",
+  "password": "abcdef"
+}
+
+### Ping
+GET http://localhost:8080/health
+
+

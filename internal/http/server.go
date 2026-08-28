@@ -1,9 +1,12 @@
+// Package http provides HTTP server and handlers.
 package http
 
 import (
 	"encoding/json"
 	"net/http"
 	"time"
+
+	"github.com/erikwco/go-authlab/internal/db"
 )
 
 const (
@@ -14,10 +17,10 @@ const (
 )
 
 // NewServer returns an HTTP server with timeouts. pinger is used by GET /health.
-func NewServer(addr string, pinger Pinger) *http.Server {
+func NewServer(addr string, store *db.Pool) *http.Server {
 	return &http.Server{
 		Addr:              addr,
-		Handler:           NewMux(pinger),
+		Handler:           NewMux(store),
 		ReadHeaderTimeout: readHeaderTimeout,
 		ReadTimeout:       readTimeout,
 		WriteTimeout:      writeTimeout,
@@ -26,9 +29,11 @@ func NewServer(addr string, pinger Pinger) *http.Server {
 }
 
 // NewMux registers HTTP routes.
-func NewMux(pinger Pinger) http.Handler {
+func NewMux(store *db.Pool) http.Handler {
 	mux := http.NewServeMux()
-	mux.Handle("GET /health", HealthHandler{DB: pinger})
+	mux.HandleFunc("POST /login", AuthHandler{DB: store}.Login)
+	mux.HandleFunc("POST /signup", AuthHandler{DB: store}.Signup)
+	mux.Handle("GET /health", HealthHandler{DB: store})
 	return mux
 }
 
