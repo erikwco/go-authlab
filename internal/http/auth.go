@@ -81,7 +81,8 @@ func (a AuthHandler) Signup(w http.ResponseWriter, r *http.Request) {
 
 	id, err := a.DB.Signup(ctx, req.Email, req.Password)
 	if err != nil {
-		writeJSON(w, http.StatusInternalServerError, AuthResponse{
+		writeJSON(w, http.StatusBadRequest, AuthResponse{
+			Email: req.Email,
 			Error: err.Error(),
 		})
 		return
